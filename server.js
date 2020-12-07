@@ -5,12 +5,13 @@ const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
 const server = express();
+const Port = 3002;
 const db = require("./components/config/db.config.js");
 //force: true will drop the table if it already exists
-db.sequelize.sync({ force: false }).then(() => {
-  console.log("Drop and Resync with { force: true }");
-});
-
+// db.sequelize.sync({ force: false }).then(() => {
+//   console.log("Drop and Resync with { force: true }");
+// });
+db.sequelize.sync();
 app.prepare().then(() => {
   server.use(bodyParser.json());
   server.use(bodyParser.urlencoded({ extended: true }));
@@ -30,11 +31,11 @@ app.prepare().then(() => {
   server.get("*", (req, res) => {
     return handle(req, res);
   });
-  server.listen(3001, (err) => {
+  server.listen(Port, (err) => {
     if (err) throw err;
-    console.log("   > Ready on listen >> Port : 3001 <    ");
+    console.log(`   > Ready on listen >> Port : ${Port} <    `);
     console.log("-----------------------------------------");
-    console.log(" PLEASE VISIT >> http://localhost:3001 <<");
+    console.log(` PLEASE VISIT >> http://localhost:${Port} <<`);
     console.log("_________________________________________");
   });
 });
